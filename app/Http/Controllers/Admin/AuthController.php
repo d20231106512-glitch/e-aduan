@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 class AuthController extends Controller
 {
-    // 1. Show the custom login form
+    // 1. Paparkan borang log masuk tersuai
     public function showLoginForm()
     {
         if (session()->has('admin_authenticated')) {
@@ -16,7 +16,7 @@ class AuthController extends Controller
         return view('admin.login');
     }
 
-    // 2. Validate fixed credentials
+    // 2. Sahkan kelayakan log masuk tetap
     public function login(Request $request)
     {
         $request->validate([
@@ -24,25 +24,29 @@ class AuthController extends Controller
             'password' => 'required|string',
         ]);
 
-        // HARDCODED FIXED CREDENTIALS FOR ADMIN PORTAL
+        // KELAYAKAN TETAP (HARDCODED) UNTUK PORTAL PENTADBIR
         $fixedUsername = 'admin';
         $fixedPassword = 'password123';
 
         if ($request->username === $fixedUsername && $request->password === $fixedPassword) {
-            // Store a secure session flag indicating the admin is verified
+            // Simpan penanda sesi selamat yang menunjukkan pentadbir telah disahkan
             session(['admin_authenticated' => true]);
-            return redirect()->route('admin.dashboard')->with('success', 'Welcome back, Admin!');
+
+            // 🌟 KEMAS KINI: Tambah ->with('show_tour', true) untuk cetus onboarding tour sekali sahaja selepas login
+            return redirect()->route('admin.dashboard')
+                ->with('success', 'Selamat kembali, Pentadbir!')
+                ->with('show_tour', true);
         }
 
         return redirect()->back()
             ->withInput($request->only('username'))
-            ->with('error', 'Invalid username or password credentials.');
+            ->with('error', 'Nama pengguna atau kata laluan tidak sah.');
     }
 
-    // 3. Clear session upon logging out
+    // 3. Kosongkan sesi semasa log keluar
     public function logout()
     {
         session()->forget('admin_authenticated');
-        return redirect()->route('admin.login')->with('success', 'Logged out successfully.');
+        return redirect()->route('admin.login')->with('success', 'Berjaya log keluar dari sistem.');
     }
 }

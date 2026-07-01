@@ -11,14 +11,14 @@ class DashboardController extends Controller
     public function index()
     {
         try {
-            // Count total complaints from the active table
+            // Kira jumlah keseluruhan aduan daripada jadual aktif
             $totalComplaints = DB::table('complaints')->count();
         } catch (\Exception $e) {
             $totalComplaints = 0;
         }
 
         try {
-            // Check for emergency keywords inside the description text safely
+            // Semak kata kunci kecemasan di dalam teks deskripsi secara selamat
             $emergencyComplaints = DB::table('complaints')
                 ->whereRaw("description ILIKE '%kecurian%' 
                             OR description ILIKE '%theft%' 
@@ -31,13 +31,15 @@ class DashboardController extends Controller
         }
 
         try {
-            // Grab latest 5 records matching real columns
+            // TETAP: Pilih lajur skema struktur baharu anda secara eksplisit (category_id, title)
             $latestComplaints = DB::table('complaints')
+                ->select('id', 'title', 'category_id', 'location', 'status', 'created_at', 'description')
                 ->orderBy('created_at', 'desc')
                 ->take(5)
                 ->get();
         } catch (\Exception $e) {
-            $latestComplaints = [];
+            // TETAP: Sandaran ditukar kepada objek koleksi kosong untuk mengelakkan ralat kitaran template break
+            $latestComplaints = collect([]);
         }
 
         return view('admin.settings.dashboard', compact('totalComplaints', 'emergencyComplaints', 'latestComplaints'));
