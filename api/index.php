@@ -1,3 +1,3 @@
 <?php
-// Pastikan ia merujuk ke arah fail index.php yang betul di dalam folder public
-require __DIR__ . '/../public/index.php';
+// Mengarah masuk ke dalam folder portal_user untuk cari index.php Laravel
+require __DIR__ . '/../portal_user/public/index.php';
