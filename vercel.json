@@ -9,11 +9,11 @@
     "routes": [
         {
             "src": "/build/(.*)",
-            "dest": "/public/build/$1"
+            "dest": "/portal_user/public/build/$1"
         },
         {
             "src": "/(css|js|images|fonts)/(.*)",
-            "dest": "/public/$1/$2"
+            "dest": "/portal_user/public/$1/$2"
         },
         {
             "src": "/(.*)",
